@@ -1,0 +1,79 @@
+{%extends 'base.html'%}
+ {%block head%}
+<script>
+    $(function () {
+        $('.col04').each(function () {
+            num = $(this).parent().find('em').attr('id');
+            //alert(num);
+            count = $(this).prev().text();
+            total = num*count;
+            //alert(total);
+            $(this).text(total)
+        })
+    })
+</script>
+{%endblock head%}
+{%block content%}
+
+	<div class="main_con clearfix">
+		<div class="left_menu_con clearfix">
+			<h3>用户中心</h3>
+			<ul>
+				<li><a href="/df_user/user_info/">· 个人信息</a></li>
+				<li><a href="/df_user/user_order/1" class="active">· 全部订单</a></li>
+				<li><a href="/df_user/user_site/">· 收货地址</a></li>
+			</ul>
+		</div>
+		<div class="right_content clearfix">
+				<h3 class="common_title2">全部订单</h3>
+			{%for page1 in page%}
+				<ul class="order_list_th w978 clearfix">
+					<li class="col01">{{page1.odate}}</li>
+					<li class="col02">{{page1.oid}}</li>
+					<li class="col02 stress">{{page1.oIspay}}</li>
+				</ul>
+
+				<table class="order_list_table w980">
+					<tbody>
+						<tr>
+							<td width="55%">
+                                {%for order in page1.oderdetailinfo_set.all%}
+
+								<ul class="order_goods_list clearfix">					
+									<li class="col01"><img src="/static/{{order.good.gpic}}"></li>
+									<li class="col02">{{order.good.gtitle}}<em id = '{{order.good.gprice}}'>{{order.good.gprice}}元/{{order.good.gunit}}</em></li>
+									<li class="col03">{{order.count}}</li>
+									<li class="col04" href="javascript:;"></li>
+								</ul>
+                                {%endfor%}
+
+							</td>
+
+							<td width="15%">{{page1.ototal}}</td>
+							<td width="15%">待付款</td>
+							<td width="15%"><a href="#" class="oper_btn">去付款</a></td>
+						</tr>
+					</tbody>
+				</table>
+            {%endfor%}
+				<div class="pagenation">
+                     {%if page.has_previous%}
+                    <a href="/df_user/user_order/{{page.previous_page_number}}"><上一页</a>
+                    {%endif%}
+                    {%for index in paginator.page_ranges%}
+
+                    {%if index == page.number%}
+					<a href="/df_user/user_order/{{index}}" class="active">{{index}}</a>
+                    {%else%}
+					<a href="/df_user/user_order/{{index}}">{{index}}</a>
+                    {%endif%}
+                    {%endfor%}
+                    {%if page.has_next%}
+                    <a href="/df_user/user_order/{{page.next_page_number}}">下一页></a>
+                    {%endif%}
+				</div>
+		</div>
+	</div>
+{%endblock content%}
+
+
